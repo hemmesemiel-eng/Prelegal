@@ -1,0 +1,24 @@
+{
+  "id": "koopovereenkomst",
+  "name": "Koopovereenkomst (roerende goederen)",
+  "category": "Handel",
+  "description": "Overeenkomst voor de koop en verkoop van roerende goederen tussen twee partijen.",
+  "variables": [
+    { "name": "verkoper_naam", "label": "Naam verkoper", "type": "text", "required": true },
+    { "name": "verkoper_adres", "label": "Adres verkoper", "type": "text", "required": true },
+    { "name": "verkoper_ondernemingsnummer", "label": "Ondernemingsnummer verkoper (indien van toepassing)", "type": "text", "required": false },
+    { "name": "koper_naam", "label": "Naam koper", "type": "text", "required": true },
+    { "name": "koper_adres", "label": "Adres koper", "type": "text", "required": true },
+    { "name": "koper_ondernemingsnummer", "label": "Ondernemingsnummer koper (indien van toepassing)", "type": "text", "required": false },
+    { "name": "goed_beschrijving", "label": "Beschrijving van het te verkopen goed", "type": "textarea", "required": true },
+    { "name": "koopprijs", "label": "Koopprijs (EUR, excl. BTW)", "type": "number", "required": true },
+    { "name": "btw_tarief", "label": "BTW-tarief (%)", "type": "number", "required": true },
+    { "name": "betaaldatum", "label": "Uiterste betaaldatum", "type": "date", "required": true },
+    { "name": "leverdatum", "label": "Leveringsdatum", "type": "date", "required": true },
+    { "name": "leverplaats", "label": "Leveringsplaats", "type": "text", "required": true },
+    { "name": "garantie_maanden", "label": "Garantieperiode (maanden)", "type": "number", "required": false },
+    { "name": "gemeente", "label": "Gemeente waar overeenkomst gesloten wordt", "type": "text", "required": true },
+    { "name": "datum_ondertekening", "label": "Datum ondertekening", "type": "date", "required": true }
+  ],
+  "content": "KOOPOVEREENKOMST\n\nTussen de ondergetekenden:\n\n{{verkoper_naam}}, gevestigd/wonende te {{verkoper_adres}}{{#verkoper_ondernemingsnummer}}, ondernemingsnummer {{verkoper_ondernemingsnummer}}{{/verkoper_ondernemingsnummer}},\nhierna \"de verkoper\" genoemd,\n\nen\n\n{{koper_naam}}, gevestigd/wonende te {{koper_adres}}{{#koper_ondernemingsnummer}}, ondernemingsnummer {{koper_ondernemingsnummer}}{{/koper_ondernemingsnummer}},\nhierna \"de koper\" genoemd,\n\nwordt het volgende overeengekomen:\n\nARTIKEL 1 – VOORWERP\n\nDe verkoper verkoopt en levert aan de koper het volgende goed:\n{{goed_beschrijving}}\n\nARTIKEL 2 – PRIJS\n\nDe koopprijs bedraagt {{koopprijs}} EUR, exclusief BTW. Het toepasselijk BTW-tarief bedraagt {{btw_tarief}}%. De totale prijs inclusief BTW bedraagt bijgevolg {{koopprijs}} EUR + {{btw_tarief}}% BTW. De koopprijs is te betalen uiterlijk op {{betaaldatum}} op het rekeningnummer dat de verkoper schriftelijk zal meedelen.\n\nARTIKEL 3 – LEVERING\n\nHet goed wordt geleverd op {{leverdatum}} te {{leverplaats}}. Het risico van het goed gaat over op de koper bij de levering. De koper dient het goed onmiddellijk bij ontvangst te controleren en eventuele gebreken of non-conformiteiten binnen 48 uur schriftelijk te melden.\n\nARTIKEL 4 – EIGENDOMSVOORBEHOUD\n\nDe eigendom van het goed gaat pas over op de koper na volledige betaling van de koopprijs, inclusief eventuele rente en kosten. Tot op dat moment heeft de verkoper het recht het goed terug te vorderen.\n\n{{#garantie_maanden}}\nARTIKEL 5 – GARANTIE\n\nDe verkoper verleent een garantie van {{garantie_maanden}} maand(en) op het verkochte goed, te rekenen vanaf de leveringsdatum. Deze garantie dekt fabricage- en materiaalfouten. Schade door verkeerd gebruik of normale slijtage valt niet onder de garantie.\n\n{{/garantie_maanden}}\nARTIKEL 6 – AANSPRAKELIJKHEID\n\nDe aansprakelijkheid van de verkoper is beperkt tot de koopprijs van het goed. De verkoper is niet aansprakelijk voor indirecte schade of gevolgschade.\n\nARTIKEL 7 – TOEPASSELIJK RECHT EN BEVOEGDE RECHTBANK\n\nDeze overeenkomst is onderworpen aan het Belgisch recht. Bij geschillen zijn uitsluitend de rechtbanken van {{gemeente}} bevoegd.\n\nOpgemaakt te {{gemeente}}, op {{datum_ondertekening}}, in twee originele exemplaren.\n\n\nDe verkoper,\t\t\t\tDe koper,\n{{verkoper_naam}}\t\t\t\t{{koper_naam}}\n(handtekening)\t\t\t\t\t(handtekening)"
+}

@@ -1,0 +1,58 @@
+{
+  "version": "1.0.0",
+  "description": "Dataset met juridische documenttemplates voor het Prelegal platform. Elk template bevat variabelen (placeholders) die het systeem kan invullen op basis van gebruikersinvoer.",
+  "placeholder_syntax": "{{variabele_naam}} voor verplichte velden, {{#variabele_naam}}...{{/variabele_naam}} voor optionele blokken",
+  "templates": [
+    {
+      "id": "huurovereenkomst",
+      "name": "Huurovereenkomst",
+      "category": "Vastgoed",
+      "description": "Standaard huurovereenkomst voor de verhuur van een woning of appartement conform de Belgische woninghuurwetgeving.",
+      "file": "templates/huurovereenkomst.json",
+      "variable_count": 16,
+      "legal_basis": "Vlaams Woninghuurdecreet van 9 november 2018"
+    },
+    {
+      "id": "nda",
+      "name": "Geheimhoudingsovereenkomst (NDA)",
+      "category": "Algemeen",
+      "description": "Non-disclosure agreement voor het beschermen van vertrouwelijke informatie tussen twee partijen.",
+      "file": "templates/nda.json",
+      "variable_count": 10,
+      "legal_basis": "Belgisch contractenrecht (BW)"
+    },
+    {
+      "id": "arbeidsovereenkomst",
+      "name": "Arbeidsovereenkomst",
+      "category": "Werk",
+      "description": "Standaard arbeidsovereenkomst voor bedienden of arbeiders conform de Belgische arbeidsregelgeving.",
+      "file": "templates/arbeidsovereenkomst.json",
+      "variable_count": 19,
+      "legal_basis": "Wet op de arbeidsovereenkomsten van 3 juli 1978"
+    },
+    {
+      "id": "koopovereenkomst",
+      "name": "Koopovereenkomst (roerende goederen)",
+      "category": "Handel",
+      "description": "Overeenkomst voor de koop en verkoop van roerende goederen tussen twee partijen.",
+      "file": "templates/koopovereenkomst.json",
+      "variable_count": 15,
+      "legal_basis": "Belgisch Burgerlijk Wetboek – Koop"
+    },
+    {
+      "id": "opdrachtsovereenkomst",
+      "name": "Opdrachtsovereenkomst (Freelance)",
+      "category": "Werk",
+      "description": "Overeenkomst voor de uitvoering van een specifieke opdracht door een zelfstandige of freelancer.",
+      "file": "templates/opdrachtsovereenkomst.json",
+      "variable_count": 16,
+      "legal_basis": "Belgisch contractenrecht (BW) – Aanneming van werk"
+    }
+  ],
+  "categories": [
+    { "id": "vastgoed", "name": "Vastgoed" },
+    { "id": "werk", "name": "Werk" },
+    { "id": "handel", "name": "Handel" },
+    { "id": "algemeen", "name": "Algemeen" }
+  ]
+}

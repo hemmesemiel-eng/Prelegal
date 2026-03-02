@@ -1,0 +1,25 @@
+{
+  "id": "huurovereenkomst",
+  "name": "Huurovereenkomst",
+  "category": "Vastgoed",
+  "description": "Standaard huurovereenkomst voor de verhuur van een woning of appartement conform de Belgische woninghuurwetgeving.",
+  "variables": [
+    { "name": "verhuurder_naam", "label": "Naam verhuurder", "type": "text", "required": true },
+    { "name": "verhuurder_adres", "label": "Adres verhuurder", "type": "text", "required": true },
+    { "name": "verhuurder_rijksregisternummer", "label": "Rijksregisternummer verhuurder", "type": "text", "required": false },
+    { "name": "huurder_naam", "label": "Naam huurder", "type": "text", "required": true },
+    { "name": "huurder_adres", "label": "Huidig adres huurder", "type": "text", "required": true },
+    { "name": "huurder_rijksregisternummer", "label": "Rijksregisternummer huurder", "type": "text", "required": false },
+    { "name": "pand_adres", "label": "Adres van het gehuurde pand", "type": "text", "required": true },
+    { "name": "pand_beschrijving", "label": "Beschrijving van het pand", "type": "textarea", "required": true },
+    { "name": "startdatum", "label": "Startdatum huur", "type": "date", "required": true },
+    { "name": "duur_jaar", "label": "Duur van de huur (jaar)", "type": "number", "required": true },
+    { "name": "huurprijs_maand", "label": "Maandelijkse huurprijs (EUR)", "type": "number", "required": true },
+    { "name": "borgsom", "label": "Borgsom (EUR)", "type": "number", "required": true },
+    { "name": "betaaldag", "label": "Uiterste betaaldag van de maand", "type": "number", "required": true },
+    { "name": "rekeningnummer_verhuurder", "label": "Rekeningnummer verhuurder (IBAN)", "type": "text", "required": true },
+    { "name": "gemeente", "label": "Gemeente waar overeenkomst gesloten wordt", "type": "text", "required": true },
+    { "name": "datum_ondertekening", "label": "Datum ondertekening", "type": "date", "required": true }
+  ],
+  "content": "HUUROVEREENKOMST\n\nTussen de ondergetekenden:\n\n{{verhuurder_naam}}, wonende te {{verhuurder_adres}}{{#verhuurder_rijksregisternummer}}, rijksregisternummer {{verhuurder_rijksregisternummer}}{{/verhuurder_rijksregisternummer}},\nhierna \"de verhuurder\" genoemd,\n\nen\n\n{{huurder_naam}}, wonende te {{huurder_adres}}{{#huurder_rijksregisternummer}}, rijksregisternummer {{huurder_rijksregisternummer}}{{/huurder_rijksregisternummer}},\nhierna \"de huurder\" genoemd,\n\nwordt het volgende overeengekomen:\n\nARTIKEL 1 – VOORWERP\n\nDe verhuurder verhuurt aan de huurder het onroerend goed gelegen te {{pand_adres}}, bestaande uit: {{pand_beschrijving}}.\n\nARTIKEL 2 – DUUR\n\nDe huurovereenkomst gaat in op {{startdatum}} voor een vaste duur van {{duur_jaar}} jaar. Bij het verstrijken van de voorziene duur eindigt de overeenkomst van rechtswege zonder opzegging, tenzij partijen schriftelijk anders zijn overeengekomen.\n\nARTIKEL 3 – HUURPRIJS\n\nDe maandelijkse huurprijs bedraagt {{huurprijs_maand}} EUR, te betalen uiterlijk de {{betaaldag}}e dag van elke maand op rekeningnummer {{rekeningnummer_verhuurder}} van de verhuurder.\n\nARTIKEL 4 – BORGSOM\n\nAls waarborg voor de naleving van zijn verplichtingen stort de huurder een borgsom van {{borgsom}} EUR vóór de aanvang van de huur. De borgsom wordt terugbetaald aan het einde van de huurovereenkomst, na aftrek van eventuele verschuldigde bedragen.\n\nARTIKEL 5 – STAAT VAN HET GOED\n\nBij de aanvang van de huur wordt door beide partijen een gedetailleerde plaatsbeschrijving opgemaakt. De huurder verbindt zich ertoe het goed in goede staat te onderhouden en het bij het einde van de huur terug te geven in de staat zoals beschreven in de plaatsbeschrijving.\n\nARTIKEL 6 – BESTEMMING\n\nHet gehuurde goed is bestemd voor uitsluitend privégebruik als hoofdverblijfplaats van de huurder. Onderverhuring is verboden zonder schriftelijke toestemming van de verhuurder.\n\nARTIKEL 7 – KOSTEN EN LASTEN\n\nDe kosten voor water, elektriciteit, gas en andere nutsvoorzieningen zijn ten laste van de huurder. De onroerende voorheffing is ten laste van de verhuurder.\n\nARTIKEL 8 – TOEPASSELIJK RECHT\n\nDeze overeenkomst is onderworpen aan het Belgisch recht, meer bepaald het Vlaams Woninghuurdecreet van 9 november 2018.\n\nOpgemaakt te {{gemeente}}, op {{datum_ondertekening}}, in twee originele exemplaren, waarvan elke partij erkent één exemplaar te hebben ontvangen.\n\n\nDe verhuurder,\t\t\t\tDe huurder,\n{{verhuurder_naam}}\t\t\t\t{{huurder_naam}}\n(handtekening)\t\t\t\t\t(handtekening)"
+}
