@@ -1,0 +1,28 @@
+{
+  "id": "arbeidsovereenkomst",
+  "name": "Arbeidsovereenkomst",
+  "category": "Werk",
+  "description": "Standaard arbeidsovereenkomst voor bedienden of arbeiders conform de Belgische arbeidsregelgeving.",
+  "variables": [
+    { "name": "werkgever_naam", "label": "Naam werkgever / vennootschap", "type": "text", "required": true },
+    { "name": "werkgever_adres", "label": "Maatschappelijke zetel werkgever", "type": "text", "required": true },
+    { "name": "werkgever_ondernemingsnummer", "label": "Ondernemingsnummer werkgever", "type": "text", "required": true },
+    { "name": "werkgever_paritair_comite", "label": "Paritair comité", "type": "text", "required": true },
+    { "name": "werknemer_naam", "label": "Naam werknemer", "type": "text", "required": true },
+    { "name": "werknemer_adres", "label": "Adres werknemer", "type": "text", "required": true },
+    { "name": "werknemer_rijksregisternummer", "label": "Rijksregisternummer werknemer", "type": "text", "required": true },
+    { "name": "werknemer_geboortedatum", "label": "Geboortedatum werknemer", "type": "date", "required": true },
+    { "name": "type_overeenkomst", "label": "Type overeenkomst", "type": "select", "required": true, "options": ["Onbepaalde duur", "Bepaalde duur", "Vervangingsovereenkomst"] },
+    { "name": "einddatum", "label": "Einddatum (enkel bij bepaalde duur)", "type": "date", "required": false },
+    { "name": "startdatum", "label": "Startdatum", "type": "date", "required": true },
+    { "name": "functie", "label": "Functie / Jobomschrijving", "type": "text", "required": true },
+    { "name": "functiecategorie", "label": "Functiecategorie / Barema", "type": "text", "required": false },
+    { "name": "arbeidsduur_per_week", "label": "Wekelijkse arbeidsduur (uren)", "type": "number", "required": true },
+    { "name": "maandloon", "label": "Brutoloon per maand (EUR)", "type": "number", "required": true },
+    { "name": "werkplaats", "label": "Gewoonlijke werkplaats", "type": "text", "required": true },
+    { "name": "proefperiode_maanden", "label": "Duur proefperiode (maanden, 0 = geen)", "type": "number", "required": true },
+    { "name": "gemeente", "label": "Gemeente waar overeenkomst gesloten wordt", "type": "text", "required": true },
+    { "name": "datum_ondertekening", "label": "Datum ondertekening", "type": "date", "required": true }
+  ],
+  "content": "ARBEIDSOVEREENKOMST\n\nTussen de ondergetekenden:\n\n{{werkgever_naam}}, gevestigd te {{werkgever_adres}}, met ondernemingsnummer {{werkgever_ondernemingsnummer}}, ressorterende onder paritair comité nr. {{werkgever_paritair_comite}},\nhierna \"de werkgever\" genoemd,\n\nen\n\n{{werknemer_naam}}, wonende te {{werknemer_adres}}, rijksregisternummer {{werknemer_rijksregisternummer}}, geboren op {{werknemer_geboortedatum}},\nhierna \"de werknemer\" genoemd,\n\nwordt het volgende overeengekomen:\n\nARTIKEL 1 – AARD VAN DE OVEREENKOMST\n\nDeze arbeidsovereenkomst wordt gesloten voor {{type_overeenkomst}}{{#einddatum}}, eindigend op {{einddatum}}{{/einddatum}}. De overeenkomst vangt aan op {{startdatum}}.\n\nARTIKEL 2 – FUNCTIE\n\nDe werknemer wordt aangeworven als {{functie}}{{#functiecategorie}}, ingedeeld in functiecategorie {{functiecategorie}}{{/functiecategorie}}. De werknemer verbindt zich ertoe de hem/haar toevertrouwde taken nauwgezet en loyaal uit te voeren.\n\nARTIKEL 3 – ARBEIDSDUUR EN WERKROOSTER\n\nDe wekelijkse arbeidsduur bedraagt {{arbeidsduur_per_week}} uur. Het toepasselijk werkrooster wordt bepaald in het arbeidsreglement en/of door de werkgever meegedeeld.\n\nARTIKEL 4 – VERLONING\n\nDe werknemer ontvangt een brutoloon van {{maandloon}} EUR per maand, te betalen conform de toepasselijke wettelijke bepalingen en collectieve arbeidsovereenkomsten. Het loon is indexeerbaar conform de geldende wetgeving.\n\nARTIKEL 5 – WERKPLAATS\n\nDe gewoonlijke werkplaats is {{werkplaats}}. De werkgever behoudt het recht de werknemer tijdelijk of definitief een andere werkplaats toe te wijzen indien de bedrijfsbelangen dit vereisen.\n\n{{#proefperiode_maanden}}\nARTIKEL 6 – PROEFPERIODE\n\nDe partijen komen een proefperiode overeen van {{proefperiode_maanden}} maand(en) te rekenen vanaf de aanvangsdatum. Gedurende de proefperiode kan elk der partijen de overeenkomst beëindigen mits een opzeggingstermijn conform de Wet van 3 juli 1978.\n\n{{/proefperiode_maanden}}\nARTIKEL 7 – GEHEIMHOUDING EN LOYAUTEIT\n\nDe werknemer verbindt zich ertoe alle bedrijfsgeheimen en vertrouwelijke informatie die hem/haar in het kader van zijn/haar werkzaamheden ter kennis komen, strikt vertrouwelijk te behandelen, zowel tijdens als na de uitvoering van deze overeenkomst.\n\nARTIKEL 8 – CONCURRENTIEBEDING\n\nNa beëindiging van de arbeidsovereenkomst en voor zover wettelijk toegestaan, kan een concurrentiebeding van toepassing zijn conform de wettelijke bepalingen van het land van tewerkstelling.\n\nARTIKEL 9 – TOEPASSELIJK RECHT\n\nDeze overeenkomst is onderworpen aan de Belgische arbeidsregelgeving, in het bijzonder de Wet op de arbeidsovereenkomsten van 3 juli 1978 en de toepasselijke collectieve arbeidsovereenkomsten.\n\nOpgemaakt te {{gemeente}}, op {{datum_ondertekening}}, in twee originele exemplaren.\n\n\nDe werkgever,\t\t\t\tDe werknemer,\n{{werkgever_naam}}\t\t\t\t{{werknemer_naam}}\n(handtekening & stempel)\t\t\t(handtekening)"
+}
