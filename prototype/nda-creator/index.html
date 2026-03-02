@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prelegal – Mutual NDA Creator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #0e1c36;
+      --navy-mid: #1a2f54;
+      --gold:   #b8975a;
+      --gold-light: #d4b07a;
+      --ink:    #1c1c1c;
+      --muted:  #6b7280;
+      --rule:   #ddd8cf;
+      --paper:  #faf9f6;
+      --white:  #ffffff;
+      --form-bg: #f4f3ef;
+      --input-border: #ccc8bf;
+      --highlight: #2a4a8a14;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--form-bg);
+      color: var(--ink);
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--navy);
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2.5rem;
+      height: 60px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 2px solid var(--gold);
+    }
+
+    .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--white);
+    }
+
+    .logo span { color: var(--gold-light); }
+
+    .badge {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      border: 1px solid var(--gold);
+      padding: 3px 10px;
+      border-radius: 2px;
+    }
+
+    /* ── LAYOUT ── */
+    .workspace {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      height: calc(100vh - 60px);
+      overflow: hidden;
+    }
+
+    /* ── FORM PANEL ── */
+    .form-panel {
+      background: var(--white);
+      border-right: 1px solid var(--rule);
+      overflow-y: auto;
+      padding: 2rem 2rem 3rem;
+    }
+
+    .form-panel::-webkit-scrollbar { width: 5px; }
+    .form-panel::-webkit-scrollbar-track { background: var(--form-bg); }
+    .form-panel::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 3px; }
+
+    .form-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 0.25rem;
+    }
+
+    .form-subtitle {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 1.75rem;
+      letter-spacing: 0.01em;
+    }
+
+    .section-label {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin: 1.5rem 0 0.75rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .field { margin-bottom: 1rem; }
+
+    label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--navy-mid);
+      margin-bottom: 0.3rem;
+      letter-spacing: 0.01em;
+    }
+
+    .optional {
+      font-weight: 300;
+      color: var(--muted);
+      font-size: 0.7rem;
+      margin-left: 4px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    textarea {
+      width: 100%;
+      padding: 0.55rem 0.75rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      color: var(--ink);
+      background: var(--form-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 3px;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+    }
+
+    input:focus, textarea:focus {
+      border-color: var(--navy-mid);
+      background: var(--white);
+      box-shadow: 0 0 0 3px var(--highlight);
+    }
+
+    textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+
+    input[type="number"] { width: 100px; }
+
+    .download-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 2rem;
+      width: 100%;
+      padding: 0.75rem 1.25rem;
+      background: var(--navy);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      justify-content: center;
+    }
+
+    .download-btn:hover { background: var(--navy-mid); }
+    .download-btn:active { transform: scale(0.99); }
+
+    .download-btn svg { flex-shrink: 0; }
+
+    /* ── DOCUMENT PANEL ── */
+    .doc-panel {
+      background: #e8e5de;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2.5rem 2rem 4rem;
+    }
+
+    .doc-panel::-webkit-scrollbar { width: 6px; }
+    .doc-panel::-webkit-scrollbar-track { background: #ddd9d1; }
+    .doc-panel::-webkit-scrollbar-thumb { background: #bbb5aa; border-radius: 3px; }
+
+    .doc-toolbar {
+      width: 100%;
+      max-width: 720px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+    }
+
+    .doc-toolbar-label {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #7a7468;
+    }
+
+    .completeness {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72rem;
+      color: #7a7468;
+    }
+
+    .progress-bar {
+      width: 80px;
+      height: 4px;
+      background: #ccc8bf;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--gold);
+      border-radius: 2px;
+      transition: width 0.3s ease;
+      width: 0%;
+    }
+
+    /* Paper document */
+    .document {
+      width: 100%;
+      max-width: 720px;
+      background: var(--paper);
+      box-shadow:
+        0 1px 3px rgba(0,0,0,0.08),
+        0 4px 16px rgba(0,0,0,0.10),
+        0 12px 40px rgba(0,0,0,0.08);
+      padding: 4rem 5rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      line-height: 1.85;
+      color: var(--ink);
+      position: relative;
+      animation: fadeUp 0.4s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Subtle paper texture via pseudo */
+    .document::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+      pointer-events: none;
+      border-radius: inherit;
+    }
+
+    .doc-header-rule {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .doc-header-rule::before,
+    .doc-header-rule::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--gold);
+      opacity: 0.6;
+    }
+
+    .doc-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .doc-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-align: center;
+      text-transform: uppercase;
+      color: var(--navy);
+      margin-bottom: 0.25rem;
+    }
+
+    .doc-subtitle {
+      text-align: center;
+      font-style: italic;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+    }
+
+    .doc-body p { margin-bottom: 0.9rem; }
+
+    .doc-body .article-title {
+      font-weight: 600;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--navy);
+      margin-top: 1.5rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .doc-body .parties {
+      background: rgba(14, 28, 54, 0.03);
+      border-left: 3px solid var(--gold);
+      padding: 1rem 1.25rem;
+      margin: 1rem 0 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    .doc-body .parties p { margin-bottom: 0.3rem; }
+
+    .placeholder {
+      display: inline-block;
+      min-width: 80px;
+      border-bottom: 1.5px solid var(--gold);
+      color: #b8975a99;
+      font-style: italic;
+      font-size: 0.85em;
+      padding: 0 2px;
+      line-height: 1.2;
+    }
+
+    .filled {
+      color: var(--ink);
+      font-style: normal;
+      border-bottom-color: transparent;
+    }
+
+    .signatures {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--rule);
+    }
+
+    .sig-block {
+      font-size: 0.9rem;
+    }
+
+    .sig-block .sig-name {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .sig-block .sig-role {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    .sig-line {
+      margin-top: 2.5rem;
+      border-top: 1px solid var(--ink);
+      padding-top: 0.3rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .doc-footer-rule {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 3rem;
+    }
+
+    .doc-footer-rule::before,
+    .doc-footer-rule::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--rule);
+    }
+
+    .doc-footer-rule span {
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #bbb5aa;
+    }
+
+    @media (max-width: 900px) {
+      .workspace { grid-template-columns: 1fr; height: auto; overflow: visible; }
+      .doc-panel { padding: 2rem 1rem 3rem; }
+      .document { padding: 2.5rem 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Pre<span>legal</span></div>
+  <div class="badge">Prototype</div>
+</header>
+
+<div class="workspace">
+
+  <!-- FORM -->
+  <aside class="form-panel">
+    <div class="form-title">Mutual NDA Creator</div>
+    <div class="form-subtitle">Vul de gegevens in — het document wordt live bijgewerkt.</div>
+
+    <div class="section-label">Partij 1</div>
+
+    <div class="field">
+      <label for="p1_naam">Naam</label>
+      <input type="text" id="p1_naam" placeholder="bv. Acme NV" />
+    </div>
+    <div class="field">
+      <label for="p1_adres">Adres</label>
+      <input type="text" id="p1_adres" placeholder="bv. Koningsstraat 1, 1000 Brussel" />
+    </div>
+    <div class="field">
+      <label for="p1_kbo">Ondernemingsnummer <span class="optional">(optioneel)</span></label>
+      <input type="text" id="p1_kbo" placeholder="bv. BE 0123.456.789" />
+    </div>
+
+    <div class="section-label">Partij 2</div>
+
+    <div class="field">
+      <label for="p2_naam">Naam</label>
+      <input type="text" id="p2_naam" placeholder="bv. Beta BV" />
+    </div>
+    <div class="field">
+      <label for="p2_adres">Adres</label>
+      <input type="text" id="p2_adres" placeholder="bv. Leopoldlaan 5, 9000 Gent" />
+    </div>
+    <div class="field">
+      <label for="p2_kbo">Ondernemingsnummer <span class="optional">(optioneel)</span></label>
+      <input type="text" id="p2_kbo" placeholder="bv. BE 0987.654.321" />
+    </div>
+
+    <div class="section-label">Overeenkomst</div>
+
+    <div class="field">
+      <label for="doel">Doel van de samenwerking</label>
+      <textarea id="doel" placeholder="bv. het gezamenlijk ontwikkelen van een softwareoplossing voor de zorgsector"></textarea>
+    </div>
+    <div class="field">
+      <label for="duur">Geheimhoudingstermijn (jaar)</label>
+      <input type="number" id="duur" value="2" min="1" max="20" />
+    </div>
+    <div class="field">
+      <label for="gemeente">Gemeente</label>
+      <input type="text" id="gemeente" placeholder="bv. Antwerpen" />
+    </div>
+    <div class="field">
+      <label for="datum">Datum ondertekening</label>
+      <input type="date" id="datum" />
+    </div>
+
+    <button class="download-btn" onclick="downloadDoc()">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+        <path d="M7.5 1v9M4 7l3.5 3.5L11 7M2 13h11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Download als .txt
+    </button>
+  </aside>
+
+  <!-- DOCUMENT PREVIEW -->
+  <main class="doc-panel">
+    <div class="doc-toolbar">
+      <span class="doc-toolbar-label">Documentvoorbeeld</span>
+      <div class="completeness">
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <span id="progressLabel">0 / 8 velden</span>
+      </div>
+    </div>
+
+    <article class="document" id="docPreview">
+
+      <div class="doc-header-rule">
+        <span class="doc-brand">Prelegal</span>
+      </div>
+
+      <div class="doc-title">Geheimhoudingsovereenkomst</div>
+      <div class="doc-subtitle">Mutual Non-Disclosure Agreement · Belgisch recht</div>
+
+      <div class="doc-body">
+
+        <p>Tussen de ondergetekenden:</p>
+
+        <div class="parties">
+          <p><span id="d_p1_naam" class="placeholder">______</span>,
+          gevestigd/wonende te <span id="d_p1_adres" class="placeholder">______</span><span id="d_p1_kbo_block"></span>,</p>
+          <p>hierna <strong>"Partij 1"</strong> genoemd,</p>
+        </div>
+
+        <p style="text-align:center; font-style:italic; color: var(--muted); font-size:0.85rem; margin: -0.5rem 0 0.5rem;">en</p>
+
+        <div class="parties">
+          <p><span id="d_p2_naam" class="placeholder">______</span>,
+          gevestigd/wonende te <span id="d_p2_adres" class="placeholder">______</span><span id="d_p2_kbo_block"></span>,</p>
+          <p>hierna <strong>"Partij 2"</strong> genoemd,</p>
+        </div>
+
+        <p>wordt het volgende overeengekomen:</p>
+
+        <div class="article-title">Artikel 1 – Doel</div>
+        <p>Partijen wensen informatie uit te wisselen in het kader van: <span id="d_doel" class="placeholder">______</span>. Met het oog hierop wensen partijen de vertrouwelijkheid van de uitgewisselde informatie wederzijds te waarborgen.</p>
+
+        <div class="article-title">Artikel 2 – Definitie vertrouwelijke informatie</div>
+        <p>Onder "Vertrouwelijke Informatie" wordt verstaan: alle informatie, al dan niet schriftelijk of elektronisch vastgelegd, die door één partij aan de andere partij wordt meegedeeld en die als vertrouwelijk wordt aangeduid of die redelijkerwijze als vertrouwelijk dient te worden beschouwd.</p>
+
+        <div class="article-title">Artikel 3 – Wederzijdse geheimhoudingsplicht</div>
+        <p>Elke partij verbindt zich ertoe:</p>
+        <p>(a)&nbsp; de Vertrouwelijke Informatie strikt vertrouwelijk te behandelen;<br>
+           (b)&nbsp; de Vertrouwelijke Informatie niet openbaar te maken aan derden zonder voorafgaande schriftelijke toestemming van de andere partij;<br>
+           (c)&nbsp; de Vertrouwelijke Informatie uitsluitend te gebruiken voor het in artikel 1 omschreven doel.</p>
+
+        <div class="article-title">Artikel 4 – Uitzonderingen</div>
+        <p>De geheimhoudingsplicht geldt niet voor informatie die reeds publiekelijk bekend was, nadien publiekelijk bekend werd zonder inbreuk op deze overeenkomst, of verplicht openbaar gemaakt dient te worden krachtens de wet.</p>
+
+        <div class="article-title">Artikel 5 – Duur</div>
+        <p>Deze overeenkomst blijft van kracht gedurende <span id="d_duur" class="placeholder">______</span> jaar vanaf de datum van ondertekening.</p>
+
+        <div class="article-title">Artikel 6 – Toepasselijk recht</div>
+        <p>Deze overeenkomst is onderworpen aan het Belgisch recht. Bij geschillen zijn uitsluitend de rechtbanken van <span id="d_gemeente" class="placeholder">______</span> bevoegd.</p>
+
+        <p style="margin-top:1.5rem;">Opgemaakt te <span id="d_gemeente2" class="placeholder">______</span>, op <span id="d_datum" class="placeholder">______</span>, in twee originele exemplaren.</p>
+
+      </div>
+
+      <div class="signatures">
+        <div class="sig-block">
+          <div class="sig-role">Partij 1</div>
+          <div class="sig-name"><span id="d_sig_p1" class="placeholder">______</span></div>
+          <div class="sig-line">Handtekening</div>
+        </div>
+        <div class="sig-block">
+          <div class="sig-role">Partij 2</div>
+          <div class="sig-name"><span id="d_sig_p2" class="placeholder">______</span></div>
+          <div class="sig-line">Handtekening</div>
+        </div>
+      </div>
+
+      <div class="doc-footer-rule">
+        <span>Gegenereerd via Prelegal · prelegal.be</span>
+      </div>
+
+    </article>
+  </main>
+
+</div>
+
+<script>
+  const fields = [
+    { inputId: 'p1_naam',  docIds: ['d_p1_naam', 'd_sig_p1'] },
+    { inputId: 'p1_adres', docIds: ['d_p1_adres'] },
+    { inputId: 'p2_naam',  docIds: ['d_p2_naam', 'd_sig_p2'] },
+    { inputId: 'p2_adres', docIds: ['d_p2_adres'] },
+    { inputId: 'doel',     docIds: ['d_doel'] },
+    { inputId: 'duur',     docIds: ['d_duur'] },
+    { inputId: 'gemeente', docIds: ['d_gemeente', 'd_gemeente2'] },
+    { inputId: 'datum',    docIds: ['d_datum'], format: formatDate },
+  ];
+
+  // Optional KBO blocks
+  document.getElementById('p1_kbo').addEventListener('input', () => updateKbo('p1_kbo', 'd_p1_kbo_block'));
+  document.getElementById('p2_kbo').addEventListener('input', () => updateKbo('p2_kbo', 'd_p2_kbo_block'));
+
+  function updateKbo(inputId, blockId) {
+    const val = document.getElementById(inputId).value.trim();
+    document.getElementById(blockId).textContent = val ? `, met ondernemingsnummer ${val}` : '';
+  }
+
+  function formatDate(val) {
+    if (!val) return null;
+    const [y, m, d] = val.split('-');
+    return `${d}/${m}/${y}`;
+  }
+
+  fields.forEach(({ inputId, docIds, format }) => {
+    const input = document.getElementById(inputId);
+    input.addEventListener('input', () => {
+      const raw = input.value.trim();
+      const display = format ? format(raw) : raw;
+      docIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (display) {
+          el.textContent = display;
+          el.classList.add('filled');
+        } else {
+          el.textContent = '______';
+          el.classList.remove('filled');
+        }
+      });
+      updateProgress();
+    });
+  });
+
+  function updateProgress() {
+    const required = ['p1_naam','p1_adres','p2_naam','p2_adres','doel','duur','gemeente','datum'];
+    const filled = required.filter(id => document.getElementById(id).value.trim() !== '').length;
+    const pct = Math.round((filled / required.length) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressLabel').textContent = `${filled} / ${required.length} velden`;
+  }
+
+  function getDocText() {
+    const g = id => document.getElementById(id).value.trim();
+    const fmtDate = v => v ? formatDate(v) : '______';
+    const kbo1 = g('p1_kbo') ? `, met ondernemingsnummer ${g('p1_kbo')}` : '';
+    const kbo2 = g('p2_kbo') ? `, met ondernemingsnummer ${g('p2_kbo')}` : '';
+
+    return `GEHEIMHOUDINGSOVEREENKOMST (MUTUAL NDA)
+Gegenereerd via Prelegal
+
+Tussen de ondergetekenden:
+
+${g('p1_naam') || '______'}, gevestigd/wonende te ${g('p1_adres') || '______'}${kbo1},
+hierna "Partij 1" genoemd,
+
+en
+
+${g('p2_naam') || '______'}, gevestigd/wonende te ${g('p2_adres') || '______'}${kbo2},
+hierna "Partij 2" genoemd,
+
+wordt het volgende overeengekomen:
+
+ARTIKEL 1 – DOEL
+Partijen wensen informatie uit te wisselen in het kader van: ${g('doel') || '______'}. Met het oog hierop wensen partijen de vertrouwelijkheid van de uitgewisselde informatie wederzijds te waarborgen.
+
+ARTIKEL 2 – DEFINITIE VERTROUWELIJKE INFORMATIE
+Onder "Vertrouwelijke Informatie" wordt verstaan: alle informatie, al dan niet schriftelijk of elektronisch vastgelegd, die door één partij aan de andere partij wordt meegedeeld en die als vertrouwelijk wordt aangeduid of die redelijkerwijze als vertrouwelijk dient te worden beschouwd.
+
+ARTIKEL 3 – WEDERZIJDSE GEHEIMHOUDINGSPLICHT
+Elke partij verbindt zich ertoe:
+(a) de Vertrouwelijke Informatie strikt vertrouwelijk te behandelen;
+(b) de Vertrouwelijke Informatie niet openbaar te maken aan derden zonder voorafgaande schriftelijke toestemming van de andere partij;
+(c) de Vertrouwelijke Informatie uitsluitend te gebruiken voor het in artikel 1 omschreven doel.
+
+ARTIKEL 4 – UITZONDERINGEN
+De geheimhoudingsplicht geldt niet voor informatie die reeds publiekelijk bekend was, nadien publiekelijk bekend werd zonder inbreuk op deze overeenkomst, of verplicht openbaar gemaakt dient te worden krachtens de wet.
+
+ARTIKEL 5 – DUUR
+Deze overeenkomst blijft van kracht gedurende ${g('duur') || '______'} jaar vanaf de datum van ondertekening.
+
+ARTIKEL 6 – TOEPASSELIJK RECHT
+Deze overeenkomst is onderworpen aan het Belgisch recht. Bij geschillen zijn uitsluitend de rechtbanken van ${g('gemeente') || '______'} bevoegd.
+
+Opgemaakt te ${g('gemeente') || '______'}, op ${fmtDate(g('datum'))}, in twee originele exemplaren.
+
+
+Partij 1,                               Partij 2,
+${g('p1_naam') || '______'}             ${g('p2_naam') || '______'}
+(handtekening)                          (handtekening)`;
+  }
+
+  function downloadDoc() {
+    const text = getDocText();
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'mutual-nda-prelegal.txt';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+</script>
+</body>
+</html>
