@@ -81,9 +81,7 @@
       letter-spacing: 0.08em;
     }
 
-    .logo-text span {
-      color: var(--gold);
-    }
+    .logo-text span { color: var(--gold); }
 
     .header-badge {
       font-family: 'Cormorant Garamond', serif;
@@ -118,10 +116,7 @@
       line-height: 1.1;
     }
 
-    .hero h1 em {
-      font-style: italic;
-      color: var(--gold-light);
-    }
+    .hero h1 em { font-style: italic; color: var(--gold-light); }
 
     .hero p {
       font-size: 0.8rem;
@@ -139,9 +134,7 @@
       margin-top: 1rem;
     }
 
-    .hero-meta {
-      text-align: right;
-    }
+    .hero-meta { text-align: right; }
 
     .hero-meta .doc-type {
       font-family: 'Cormorant Garamond', serif;
@@ -188,13 +181,44 @@
       text-transform: uppercase;
       color: var(--forest);
       padding-bottom: 1rem;
+      margin-bottom: 1rem;
       border-bottom: 1px solid var(--rule);
-      margin-bottom: 1.5rem;
     }
 
-    .form-section {
-      margin-bottom: 1.8rem;
+    /* ── VOORTGANGSBALK ── */
+    .progress-wrap {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--rule);
     }
+
+    .progress-track {
+      height: 3px;
+      background: var(--parchment);
+      margin-bottom: 0.45rem;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, var(--forest), var(--gold));
+      transition: width 0.35s ease;
+      width: 0%;
+    }
+
+    .progress-label {
+      font-size: 0.68rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      color: var(--ink-muted);
+    }
+
+    .progress-label strong {
+      color: var(--forest);
+      font-weight: 600;
+    }
+
+    /* ── FORM SECTIONS & FIELDS ── */
+    .form-section { margin-bottom: 1.8rem; }
 
     .section-label {
       font-family: 'Cormorant Garamond', serif;
@@ -219,9 +243,7 @@
       flex-shrink: 0;
     }
 
-    .field {
-      margin-bottom: 1rem;
-    }
+    .field { margin-bottom: 1rem; }
 
     .field label {
       display: block;
@@ -280,28 +302,44 @@
       gap: 0.75rem;
     }
 
+    /* ── KNOPPEN ── */
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
     .download-btn {
       width: 100%;
       padding: 0.85rem 1.5rem;
       background: var(--forest);
       color: var(--white);
-      border: none;
+      border: 1.5px solid transparent;
       font-family: 'Jost', sans-serif;
       font-size: 0.75rem;
       font-weight: 500;
       letter-spacing: 0.15em;
       text-transform: uppercase;
       cursor: pointer;
-      margin-top: 0.5rem;
-      transition: background 0.2s;
+      transition: background 0.2s, border-color 0.2s;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 0.75rem;
     }
 
-    .download-btn:hover {
-      background: var(--forest-light);
+    .download-btn:hover { background: var(--forest-light); }
+
+    .download-btn--secondary {
+      background: transparent;
+      color: var(--forest);
+      border-color: var(--rule);
+    }
+
+    .download-btn--secondary:hover {
+      background: var(--parchment);
+      border-color: var(--forest);
     }
 
     .download-btn svg {
@@ -406,9 +444,7 @@
       margin: 1.5rem 0;
     }
 
-    .doc-body p {
-      margin-bottom: 1rem;
-    }
+    .doc-body p { margin-bottom: 1rem; }
 
     .article-heading {
       font-weight: 600;
@@ -420,10 +456,7 @@
       margin-bottom: 0.6rem;
     }
 
-    .article-text {
-      font-size: 0.9rem;
-      color: var(--ink);
-    }
+    .article-text { font-size: 0.9rem; color: var(--ink); }
 
     .article-sub {
       padding-left: 1.5rem;
@@ -497,7 +530,7 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    .form-panel { animation: fadeUp 0.5s ease both; animation-delay: 0.1s; }
+    .form-panel    { animation: fadeUp 0.5s ease both; animation-delay: 0.1s; }
     .preview-panel { animation: fadeUp 0.5s ease both; animation-delay: 0.2s; }
 
     /* ── RESPONSIVE ── */
@@ -508,6 +541,107 @@
       .hero { padding: 2rem 1.5rem; }
       main { padding: 2rem 1.5rem; }
       .document { padding: 2.5rem 2rem; }
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       PRINT STYLESHEET — alleen actief bij window.print()
+       ══════════════════════════════════════════════════════════ */
+    @media print {
+
+      @page {
+        size: A4 portrait;
+        margin: 20mm 25mm 20mm 25mm;
+      }
+
+      /* Verberg alle UI-elementen */
+      header,
+      .hero,
+      .form-panel,
+      .preview-header {
+        display: none !important;
+      }
+
+      /* Reset pagina-achtergrond */
+      html, body {
+        background: white !important;
+        background-image: none !important;
+        color: #1c1c1c !important;
+      }
+
+      /* Layout terugzetten naar één kolom */
+      main {
+        display: block !important;
+        max-width: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      .preview-panel {
+        border: none !important;
+        width: 100% !important;
+      }
+
+      /* Document opmaak voor papier */
+      .document {
+        padding: 0 !important;
+        font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+        font-size: 10.5pt;
+        line-height: 1.7;
+        color: #1c1c1c !important;
+        min-height: none !important;
+      }
+
+      .doc-title {
+        font-size: 16pt;
+        color: #1a3a2a !important;
+      }
+
+      .article-heading {
+        font-size: 9pt;
+        color: #1a3a2a !important;
+        break-after: avoid;
+        page-break-after: avoid;
+      }
+
+      .signature-section {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      .sig-block {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      /* Lege velden worden rood gemarkeerd als waarschuwing */
+      .placeholder {
+        color: #cc0000 !important;
+        border-bottom: 1px solid #cc0000 !important;
+        font-style: italic;
+      }
+
+      /* Ingevulde waarden: verwijder decoratieve groene onderlijn */
+      .filled {
+        color: #1c1c1c !important;
+        border-bottom: none !important;
+        font-weight: 600;
+      }
+
+      /* Gouden lijn: gradient werkt niet in print, gebruik solide lijn */
+      .doc-rule {
+        background: none !important;
+        border-bottom: 1px solid #c9a84c !important;
+        height: 1px !important;
+      }
+
+      /* Animaties uitzetten */
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+
+      /* Voorkom dat browser URL's afdrukt na links */
+      a[href]::after { content: none !important; }
     }
   </style>
 </head>
@@ -546,64 +680,78 @@
     <div class="form-panel">
       <div class="panel-title">Gegevens invullen</div>
 
+      <!-- VOORTGANGSBALK -->
+      <div class="progress-wrap">
+        <div class="progress-track">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <span class="progress-label" id="progress-label">Vul de verplichte velden in om te beginnen</span>
+      </div>
+
       <div class="form-section">
         <div class="section-label">Partij 1</div>
         <div class="field">
-          <label>Naam of handelsnaam</label>
-          <input type="text" id="p1_naam" placeholder="bijv. Innovatech B.V." oninput="updateDoc()" />
+          <label for="p1_naam">Naam of handelsnaam</label>
+          <input type="text" id="p1_naam" placeholder="bijv. Innovatech B.V." oninput="scheduleUpdate()" />
         </div>
         <div class="field">
-          <label>Adres</label>
-          <input type="text" id="p1_adres" placeholder="Straat 1, 1234 AB Stad" oninput="updateDoc()" />
+          <label for="p1_adres">Adres</label>
+          <input type="text" id="p1_adres" placeholder="Straat 1, 1234 AB Stad" oninput="scheduleUpdate()" />
         </div>
         <div class="field">
-          <label>KvK-nummer <span class="opt">(optioneel)</span></label>
-          <input type="text" id="p1_kvk" placeholder="12345678" oninput="updateDoc()" />
+          <label for="p1_kvk">KvK-nummer <span class="opt">(optioneel)</span></label>
+          <input type="text" id="p1_kvk" placeholder="12345678" oninput="scheduleUpdate()" />
         </div>
       </div>
 
       <div class="form-section">
         <div class="section-label">Partij 2</div>
         <div class="field">
-          <label>Naam of handelsnaam</label>
-          <input type="text" id="p2_naam" placeholder="bijv. Stratego Group B.V." oninput="updateDoc()" />
+          <label for="p2_naam">Naam of handelsnaam</label>
+          <input type="text" id="p2_naam" placeholder="bijv. Stratego Group B.V." oninput="scheduleUpdate()" />
         </div>
         <div class="field">
-          <label>Adres</label>
-          <input type="text" id="p2_adres" placeholder="Straat 1, 1234 AB Stad" oninput="updateDoc()" />
+          <label for="p2_adres">Adres</label>
+          <input type="text" id="p2_adres" placeholder="Straat 1, 1234 AB Stad" oninput="scheduleUpdate()" />
         </div>
         <div class="field">
-          <label>KvK-nummer <span class="opt">(optioneel)</span></label>
-          <input type="text" id="p2_kvk" placeholder="87654321" oninput="updateDoc()" />
+          <label for="p2_kvk">KvK-nummer <span class="opt">(optioneel)</span></label>
+          <input type="text" id="p2_kvk" placeholder="87654321" oninput="scheduleUpdate()" />
         </div>
       </div>
 
       <div class="form-section">
         <div class="section-label">Overeenkomst</div>
         <div class="field">
-          <label>Doel van de samenwerking</label>
-          <textarea id="doel" placeholder="Beschrijf het doel waarvoor informatie wordt uitgewisseld..." oninput="updateDoc()"></textarea>
+          <label for="doel">Doel van de samenwerking</label>
+          <textarea id="doel" placeholder="Beschrijf het doel waarvoor informatie wordt uitgewisseld..." oninput="scheduleUpdate()"></textarea>
         </div>
         <div class="field field-row">
           <div>
-            <label>Rechtbank (gemeente)</label>
-            <input type="text" id="gemeente" placeholder="Amsterdam" oninput="updateDoc()" />
+            <label for="gemeente">Rechtbank (gemeente)</label>
+            <input type="text" id="gemeente" placeholder="Amsterdam" oninput="scheduleUpdate()" />
           </div>
           <div>
-            <label>Duur (jaren)</label>
-            <input type="number" id="duur" value="2" min="1" max="10" oninput="updateDoc()" />
+            <label for="duur">Duur (jaren)</label>
+            <input type="number" id="duur" value="2" min="1" max="10" oninput="scheduleUpdate()" />
           </div>
         </div>
         <div class="field">
-          <label>Datum ondertekening</label>
-          <input type="date" id="datum" oninput="updateDoc()" />
+          <label for="datum">Datum ondertekening</label>
+          <input type="date" id="datum" oninput="scheduleUpdate()" />
         </div>
       </div>
 
-      <button class="download-btn" onclick="downloadTxt()">
-        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-        Document downloaden als .txt
-      </button>
+      <div class="btn-group">
+        <button class="download-btn" onclick="printDoc()">
+          <svg viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z"/></svg>
+          Opslaan als PDF
+        </button>
+        <button class="download-btn download-btn--secondary" onclick="downloadTxt()">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+          Downloaden als .txt
+        </button>
+      </div>
     </div>
 
     <!-- DOCUMENT PREVIEW -->
@@ -620,15 +768,30 @@
   </main>
 
   <script>
+    // ── VERPLICHTE VELDEN ────────────────────────────────────────────────────────
+    // 'duur' staat niet in REQUIRED omdat het al een standaardwaarde heeft (2 jaar).
+    const REQUIRED = ['p1_naam', 'p1_adres', 'p2_naam', 'p2_adres', 'doel', 'gemeente', 'datum'];
+
+    // ── HULPFUNCTIES ─────────────────────────────────────────────────────────────
     function val(id) {
       return document.getElementById(id)?.value?.trim() || '';
     }
 
+    // Fix XSS: gebruikersinvoer wordt gesaneerd voordat het in innerHTML belandt.
+    // Zo breekt invoer met <, >, & het document niet.
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
     function span(text, isFilled) {
-      if (isFilled) {
-        return `<span class="filled">${text}</span>`;
-      }
-      return `<span class="placeholder">${text}</span>`;
+      const safe = escapeHtml(text);
+      return isFilled
+        ? `<span class="filled">${safe}</span>`
+        : `<span class="placeholder">${safe}</span>`;
     }
 
     function f(id, fallback) {
@@ -636,7 +799,7 @@
       return v ? span(v, true) : span(fallback, false);
     }
 
-    function kvkClause(id, partijNaam) {
+    function kvkClause(id) {
       const v = val(id);
       if (!v) return '';
       return `, ingeschreven in het handelsregister van de Kamer van Koophandel onder nummer ${span(v, true)}`;
@@ -645,18 +808,43 @@
     function formatDate(id) {
       const v = val(id);
       if (!v) return span('datum', false);
-      const d = new Date(v);
-      const opts = { day: 'numeric', month: 'long', year: 'numeric' };
-      return span(d.toLocaleDateString('nl-NL', opts), true);
+      const d = new Date(v + 'T00:00:00'); // voorkom tijdzone-verschuiving
+      return span(d.toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' }), true);
     }
 
+    // ── DEBOUNCE ─────────────────────────────────────────────────────────────────
+    // Wacht 150ms na de laatste toetsaanslag voordat de preview wordt bijgewerkt.
+    // Voorkomt onnodige hertekeningen bij snel typen.
+    let _debounceTimer = null;
+    function scheduleUpdate() {
+      clearTimeout(_debounceTimer);
+      _debounceTimer = setTimeout(updateDoc, 150);
+    }
+
+    // ── VOORTGANGSBALK ───────────────────────────────────────────────────────────
+    function updateProgress() {
+      const filled = REQUIRED.filter(id => val(id) !== '').length;
+      const total  = REQUIRED.length;
+      const pct    = Math.round((filled / total) * 100);
+
+      document.getElementById('progress-fill').style.width = pct + '%';
+
+      const label = document.getElementById('progress-label');
+      if (filled === total) {
+        label.innerHTML = '<strong>Document volledig ingevuld</strong> — klaar om op te slaan';
+      } else {
+        label.innerHTML = `<strong>${filled} van ${total}</strong> verplichte velden ingevuld`;
+      }
+    }
+
+    // ── DOCUMENT OPBOUWEN ────────────────────────────────────────────────────────
     function updateDoc() {
-      const preview = document.getElementById('doc-preview');
+      updateProgress();
 
       const p1 = val('p1_naam') || null;
       const p2 = val('p2_naam') || null;
 
-      preview.innerHTML = `
+      document.getElementById('doc-preview').innerHTML = `
         <div class="doc-watermark">
           <div class="seal">
             <svg viewBox="0 0 24 24"><path d="M12 2l2.5 5 5.5.8-4 3.9.9 5.5L12 14.8l-4.9 2.4.9-5.5-4-3.9 5.5-.8z"/></svg>
@@ -670,17 +858,16 @@
           <p>Tussen de ondergetekenden:</p>
 
           <p>
-            ${f('p1_naam', 'Naam Partij 1')}, gevestigd te ${f('p1_adres', 'adres Partij 1')}${kvkClause('p1_kvk', 'p1')},
+            ${f('p1_naam', 'Naam Partij 1')}, gevestigd te ${f('p1_adres', 'adres Partij 1')}${kvkClause('p1_kvk')},
             hierna te noemen <strong>"Partij 1"</strong>,
           </p>
           <p style="text-align:center; color: var(--forest-light); font-style: italic;">en</p>
           <p>
-            ${f('p2_naam', 'Naam Partij 2')}, gevestigd te ${f('p2_adres', 'adres Partij 2')}${kvkClause('p2_kvk', 'p2')},
+            ${f('p2_naam', 'Naam Partij 2')}, gevestigd te ${f('p2_adres', 'adres Partij 2')}${kvkClause('p2_kvk')},
             hierna te noemen <strong>"Partij 2"</strong>,
           </p>
 
           <p>hierna gezamenlijk te noemen de <strong>"Partijen"</strong>,</p>
-
           <p>komen het volgende overeen:</p>
 
           <div class="article-heading">Artikel 1 — Doel</div>
@@ -692,34 +879,42 @@
 
           <div class="article-heading">Artikel 2 — Definitie vertrouwelijke informatie</div>
           <p class="article-text">
-            Onder <em>"Vertrouwelijke Informatie"</em> wordt verstaan: alle informatie, al dan niet schriftelijk of elektronisch vastgelegd, die door één Partij aan de andere Partij wordt meegedeeld en die als vertrouwelijk wordt aangeduid, dan wel die naar haar aard als vertrouwelijk dient te worden beschouwd.
+            Onder <em>"Vertrouwelijke Informatie"</em> wordt verstaan: alle informatie, al dan niet schriftelijk of elektronisch vastgelegd, die door één Partij aan de andere Partij wordt meegedeeld en die als vertrouwelijk wordt aangeduid, dan wel die naar haar aard als vertrouwelijk dient te worden beschouwd, waaronder doch niet beperkt tot bedrijfsgeheimen, financiële gegevens, technische informatie, klantgegevens en strategische plannen.
           </p>
 
           <div class="article-heading">Artikel 3 — Wederzijdse geheimhoudingsplicht</div>
           <p class="article-text">Iedere Partij verbindt zich ertoe:</p>
           <p class="article-sub">(a)&ensp;de Vertrouwelijke Informatie strikt vertrouwelijk te behandelen en niet aan derden bekend te maken zonder voorafgaande schriftelijke toestemming van de andere Partij;</p>
           <p class="article-sub">(b)&ensp;de Vertrouwelijke Informatie uitsluitend te gebruiken voor het in artikel 1 omschreven doel;</p>
-          <p class="article-sub">(c)&ensp;de Vertrouwelijke Informatie slechts beschikbaar te stellen aan werknemers of adviseurs voor zover dat strikt noodzakelijk is voor voornoemd doel, en die gebonden zijn aan een gelijkwaardige geheimhoudingsverplichting.</p>
+          <p class="article-sub">(c)&ensp;de Vertrouwelijke Informatie slechts beschikbaar te stellen aan werknemers of adviseurs voor zover dat strikt noodzakelijk is voor voornoemd doel, en die gebonden zijn aan een gelijkwaardige geheimhoudingsverplichting;</p>
+          <p class="article-sub">(d)&ensp;de Vertrouwelijke Informatie te beschermen met minimaal dezelfde zorgvuldigheid als de eigen vertrouwelijke informatie, maar in ieder geval met redelijke zorgvuldigheid;</p>
+          <p class="article-sub">(e)&ensp;de andere Partij onverwijld schriftelijk te informeren indien zij kennis krijgt van een (dreigende) schending van deze geheimhoudingsplicht.</p>
 
           <div class="article-heading">Artikel 4 — Uitzonderingen</div>
           <p class="article-text">
-            De geheimhoudingsplicht is niet van toepassing op informatie die: (i) reeds publiekelijk bekend was op het moment van verstrekking; (ii) nadien publiekelijk bekend is geworden buiten toedoen van de ontvangende Partij; of (iii) krachtens wet of rechterlijk bevel openbaar gemaakt dient te worden, mits de ontvangende Partij de verstrekkende Partij hiervan zo spoedig mogelijk in kennis stelt.
+            De geheimhoudingsplicht is niet van toepassing op informatie die: (i) reeds publiekelijk bekend was op het moment van verstrekking; (ii) nadien publiekelijk bekend is geworden buiten toedoen van de ontvangende Partij; (iii) door de ontvangende Partij aantoonbaar zelfstandig en onafhankelijk is ontwikkeld; (iv) rechtmatig van een derde is verkregen zonder geheimhoudingsverplichting; of (v) krachtens wet of rechterlijk bevel openbaar gemaakt dient te worden, mits de ontvangende Partij de verstrekkende Partij hiervan zo spoedig mogelijk in kennis stelt en de openbaarmaking tot het strikt noodzakelijke beperkt.
           </p>
 
           <div class="article-heading">Artikel 5 — Duur</div>
           <p class="article-text">
             Deze overeenkomst treedt in werking op de datum van ondertekening en blijft van kracht gedurende
             ${f('duur', '___')} jaar, tenzij eerder beëindigd met wederzijds schriftelijk akkoord van Partijen.
+            Na beëindiging van deze overeenkomst blijven de geheimhoudingsverplichtingen van kracht ten aanzien van informatie die vóór de beëindigingsdatum is verstrekt.
           </p>
 
-          <div class="article-heading">Artikel 6 — Toepasselijk recht en bevoegde rechter</div>
+          <div class="article-heading">Artikel 6 — Sancties</div>
+          <p class="article-text">
+            Bij schending van de in deze overeenkomst opgenomen verplichtingen heeft de benadeelde Partij recht op vergoeding van alle daardoor geleden schade, waaronder gevolgschade en gederfde winst. De benadeelde Partij kan daarnaast nakoming van de geheimhoudingsverplichting en/of een verbod op verdere inbreuk vorderen, onverminderd het recht op schadevergoeding. Partijen erkennen dat een schending van deze overeenkomst onherstelbare schade kan veroorzaken waarvoor een geldelijke vergoeding mogelijk ontoereikend is.
+          </p>
+
+          <div class="article-heading">Artikel 7 — Toepasselijk recht en bevoegde rechter</div>
           <p class="article-text">
             Op deze overeenkomst is uitsluitend Nederlands recht van toepassing. Alle geschillen die voortvloeien uit of verband houden met deze overeenkomst worden bij uitsluiting voorgelegd aan de bevoegde rechter van de Rechtbank ${f('gemeente', 'bevoegde rechtbank')}.
           </p>
 
-          <div class="article-heading">Artikel 7 — Overige bepalingen</div>
+          <div class="article-heading">Artikel 8 — Overige bepalingen</div>
           <p class="article-text">
-            Indien enige bepaling van deze overeenkomst nietig of vernietigbaar blijkt te zijn, laat dit de geldigheid van de overige bepalingen onverlet. Partijen zullen in dat geval een vervangende bepaling overeenkomen die het economische doel van de oorspronkelijke bepaling zoveel mogelijk benadert. Wijzigingen van deze overeenkomst zijn slechts geldig indien schriftelijk overeengekomen.
+            Indien enige bepaling van deze overeenkomst nietig of vernietigbaar blijkt te zijn, laat dit de geldigheid van de overige bepalingen onverlet. Partijen zullen in dat geval een vervangende bepaling overeenkomen die het economische doel van de oorspronkelijke bepaling zoveel mogelijk benadert. Wijzigingen van deze overeenkomst zijn slechts geldig indien schriftelijk overeengekomen en door beide Partijen ondertekend.
           </p>
 
           <div class="signature-section">
@@ -747,17 +942,46 @@
       `;
     }
 
+    // ── PDF AFDRUKKEN ─────────────────────────────────────────────────────────────
+    function printDoc() {
+      // Controleer of alle verplichte velden zijn ingevuld
+      const missing = REQUIRED.filter(id => val(id) === '');
+      if (missing.length > 0) {
+        const aantal = missing.length;
+        const bevestig = confirm(
+          `Er ${aantal === 1 ? 'is' : 'zijn'} nog ${aantal} verplicht${aantal === 1 ? '' : 'e'} veld${aantal === 1 ? '' : 'en'} niet ingevuld.\n\n` +
+          `Lege velden worden rood gemarkeerd in de PDF.\n\n` +
+          `Wil je toch doorgaan?`
+        );
+        if (!bevestig) return;
+      }
+
+      // Stel de paginatitel in — browsers gebruiken dit als standaard bestandsnaam
+      const p1 = val('p1_naam') || 'Partij1';
+      const p2 = val('p2_naam') || 'Partij2';
+      const origTitle = document.title;
+      document.title = `NDA – ${p1} & ${p2}`;
+
+      window.print();
+
+      // Herstel de originele titel na sluiten van de printdialoog
+      setTimeout(() => { document.title = origTitle; }, 1000);
+    }
+
+    // ── TXT DOWNLOAD ──────────────────────────────────────────────────────────────
     function downloadTxt() {
-      const p1n   = val('p1_naam')  || '___';
-      const p1a   = val('p1_adres') || '___';
-      const p1k   = val('p1_kvk');
-      const p2n   = val('p2_naam')  || '___';
-      const p2a   = val('p2_adres') || '___';
-      const p2k   = val('p2_kvk');
-      const doel  = val('doel')     || '___';
-      const duur  = val('duur')     || '___';
-      const gem   = val('gemeente') || '___';
-      const datum = val('datum')    ? new Date(val('datum')).toLocaleDateString('nl-NL', {day:'numeric',month:'long',year:'numeric'}) : '___';
+      const p1n  = val('p1_naam')  || '___';
+      const p1a  = val('p1_adres') || '___';
+      const p1k  = val('p1_kvk');
+      const p2n  = val('p2_naam')  || '___';
+      const p2a  = val('p2_adres') || '___';
+      const p2k  = val('p2_kvk');
+      const doel = val('doel')     || '___';
+      const duur = val('duur')     || '___';
+      const gem  = val('gemeente') || '___';
+      const datum = val('datum')
+        ? new Date(val('datum') + 'T00:00:00').toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' })
+        : '___';
 
       const p1kvk = p1k ? `, ingeschreven in het handelsregister van de KvK onder nummer ${p1k}` : '';
       const p2kvk = p2k ? `, ingeschreven in het handelsregister van de KvK onder nummer ${p2k}` : '';
@@ -791,7 +1015,9 @@ ARTIKEL 2 — DEFINITIE VERTROUWELIJKE INFORMATIE
 Onder "Vertrouwelijke Informatie" wordt verstaan: alle informatie, al dan niet
 schriftelijk of elektronisch vastgelegd, die door één Partij aan de andere Partij
 wordt meegedeeld en die als vertrouwelijk wordt aangeduid, dan wel die naar haar
-aard als vertrouwelijk dient te worden beschouwd.
+aard als vertrouwelijk dient te worden beschouwd, waaronder doch niet beperkt tot
+bedrijfsgeheimen, financiële gegevens, technische informatie, klantgegevens en
+strategische plannen.
 
 
 ARTIKEL 3 — WEDERZIJDSE GEHEIMHOUDINGSPLICHT
@@ -803,35 +1029,52 @@ Iedere Partij verbindt zich ertoe:
     omschreven doel;
 (c) de Vertrouwelijke Informatie slechts beschikbaar te stellen aan werknemers of
     adviseurs voor zover dat strikt noodzakelijk is voor voornoemd doel, en die
-    gebonden zijn aan een gelijkwaardige geheimhoudingsverplichting.
+    gebonden zijn aan een gelijkwaardige geheimhoudingsverplichting;
+(d) de andere Partij onverwijld schriftelijk te informeren indien zij kennis krijgt
+    van een (dreigende) schending van deze geheimhoudingsplicht.
 
 
 ARTIKEL 4 — UITZONDERINGEN
 De geheimhoudingsplicht is niet van toepassing op informatie die: (i) reeds
 publiekelijk bekend was op het moment van verstrekking; (ii) nadien publiekelijk
-bekend is geworden buiten toedoen van de ontvangende Partij; of (iii) krachtens
-wet of rechterlijk bevel openbaar gemaakt dient te worden, mits de ontvangende
-Partij de verstrekkende Partij hiervan zo spoedig mogelijk in kennis stelt.
+bekend is geworden buiten toedoen van de ontvangende Partij; (iii) door de
+ontvangende Partij aantoonbaar zelfstandig en onafhankelijk is ontwikkeld;
+(iv) rechtmatig van een derde is verkregen zonder geheimhoudingsverplichting; of
+(v) krachtens wet of rechterlijk bevel openbaar gemaakt dient te worden, mits de
+ontvangende Partij de verstrekkende Partij hiervan zo spoedig mogelijk in kennis
+stelt en de openbaarmaking tot het strikt noodzakelijke beperkt.
 
 
 ARTIKEL 5 — DUUR
 Deze overeenkomst treedt in werking op de datum van ondertekening en blijft van
 kracht gedurende ${duur} jaar, tenzij eerder beëindigd met wederzijds schriftelijk
-akkoord van Partijen.
+akkoord van Partijen. Na beëindiging blijven de geheimhoudingsverplichtingen van
+kracht ten aanzien van informatie die vóór de beëindigingsdatum is verstrekt.
 
 
-ARTIKEL 6 — TOEPASSELIJK RECHT EN BEVOEGDE RECHTER
+ARTIKEL 6 — SANCTIES
+Bij schending van de in deze overeenkomst opgenomen verplichtingen heeft de
+benadeelde Partij recht op vergoeding van alle daardoor geleden schade, waaronder
+gevolgschade en gederfde winst. De benadeelde Partij kan daarnaast nakoming van
+de geheimhoudingsverplichting en/of een verbod op verdere inbreuk vorderen,
+onverminderd het recht op schadevergoeding. Partijen erkennen dat een schending
+van deze overeenkomst onherstelbare schade kan veroorzaken waarvoor een
+geldelijke vergoeding mogelijk ontoereikend is.
+
+
+ARTIKEL 7 — TOEPASSELIJK RECHT EN BEVOEGDE RECHTER
 Op deze overeenkomst is uitsluitend Nederlands recht van toepassing. Alle
 geschillen die voortvloeien uit of verband houden met deze overeenkomst worden
 bij uitsluiting voorgelegd aan de bevoegde rechter van de Rechtbank ${gem}.
 
 
-ARTIKEL 7 — OVERIGE BEPALINGEN
+ARTIKEL 8 — OVERIGE BEPALINGEN
 Indien enige bepaling van deze overeenkomst nietig of vernietigbaar blijkt te zijn,
 laat dit de geldigheid van de overige bepalingen onverlet. Partijen zullen in dat
 geval een vervangende bepaling overeenkomen die het economische doel van de
 oorspronkelijke bepaling zoveel mogelijk benadert. Wijzigingen van deze
-overeenkomst zijn slechts geldig indien schriftelijk overeengekomen.
+overeenkomst zijn slechts geldig indien schriftelijk overeengekomen en door beide
+Partijen ondertekend.
 
 
 ${'='.repeat(60)}
@@ -849,13 +1092,21 @@ Gegenereerd via Prelegal — Dit document dient als concept en vervangt geen jur
 `;
 
       const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href     = url;
       a.download = 'NDA-Geheimhouding.txt';
       a.click();
+      // Geheugenfix: ruim de tijdelijke object-URL op na de download
+      setTimeout(() => URL.revokeObjectURL(url), 100);
     }
 
-    // Initialiseer document bij laden
+    // ── INITIALISATIE ─────────────────────────────────────────────────────────────
+    // Zet datum standaard op vandaag
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('datum').value = today;
+
+    // Render het document direct bij het laden
     updateDoc();
   </script>
 </body>
