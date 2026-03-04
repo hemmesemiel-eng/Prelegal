@@ -27,3 +27,19 @@ export async function getTemplate(id) {
   }
   return response.json();
 }
+
+/**
+ * Stuur een chatbericht naar de NDA AI assistent.
+ * @param {Array}  messages      - Array van {role, content} objecten
+ * @param {Object} currentValues - Huidige veldwaarden { veldnaam: waarde }
+ * @returns {Promise<{reply: string, patches: Array}>}
+ */
+export async function sendNdaChat(messages, currentValues) {
+  const response = await fetch('/api/nda-chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ messages, current_values: currentValues }),
+  });
+  if (!response.ok) throw new Error(`API fout: ${response.status}`);
+  return response.json();
+}
