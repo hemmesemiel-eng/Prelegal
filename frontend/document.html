@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prelegal – Document aanmaken</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/css/prelegal.css" />
+</head>
+<body>
+
+  <header>
+    <a class="logo" href="/home">
+      <div class="logo-mark">
+        <svg viewBox="0 0 16 16"><path d="M8 1L2 4v4c0 3.5 2.5 6.5 6 7.5C11.5 14.5 14 11.5 14 8V4L8 1z"/></svg>
+      </div>
+      <span class="logo-text">Pre<span>legal</span></span>
+    </a>
+    <div class="header-actions">
+      <a class="back-link" href="/home">
+        &#8592; Terug naar overzicht
+      </a>
+      <button class="btn-ghost" id="logout-btn">Uitloggen</button>
+    </div>
+  </header>
+
+  <div class="hero">
+    <div class="hero-inner">
+      <div>
+        <h1 id="hero-title"><em>Document</em> aanmaken</h1>
+        <p>Vul de gegevens in — het document wordt live bijgewerkt</p>
+        <div class="hero-rule"></div>
+      </div>
+      <div class="hero-meta">
+        <div class="doc-type" id="hero-category">—</div>
+        <div class="jurisdiction">Nederlands recht</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-split">
+
+    <!-- Formulier paneel (links) -->
+    <aside class="form-panel">
+      <div class="panel-title">Gegevens invullen</div>
+
+      <div class="progress-wrap">
+        <div class="progress-track">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <div class="progress-label" id="progress-label">Bezig met laden…</div>
+      </div>
+
+      <div id="form-fields">
+        <!-- Wordt dynamisch gevuld -->
+      </div>
+
+      <div class="btn-group" style="margin-top:1.5rem; padding-top:1rem; border-top:1px solid var(--rule);">
+        <button class="download-btn" onclick="printDoc()">
+          <svg viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z"/></svg>
+          Opslaan als PDF
+        </button>
+        <button class="download-btn download-btn--secondary" onclick="downloadTxt()">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+          Download als .txt
+        </button>
+      </div>
+    </aside>
+
+    <!-- Preview paneel (rechts) -->
+    <div class="preview-panel">
+      <div class="preview-header">
+        <span>Live voorvertoning</span>
+        <div class="live-dot"></div>
+      </div>
+      <div class="document">
+        <div id="doc-preview">
+          <!-- Wordt dynamisch gevuld -->
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script type="module">
+    import { getTemplate }    from '/assets/js/api.js';
+    import { renderHtml, renderText } from '/assets/js/template-engine.js';
+    import { buildForm, getValues, getProgress } from '/assets/js/form-builder.js';
+
+    // Auth-guard: niet ingelogd → terug naar loginpagina
+    if (!sessionStorage.getItem('pl_logged_in')) {
+      window.location.href = '/';
+      throw new Error('redirect');
+    }
+
+    // Uitloggen
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      sessionStorage.removeItem('pl_logged_in');
+      window.location.href = '/';
+    });
+
+    // ── INITIALISATIE ──────────────────────────────────────────────
+    const params     = new URLSearchParams(window.location.search);
+    const templateId = params.get('id');
+
+    if (!templateId) {
+      window.location.href = '/home';
+      throw new Error('redirect');
+    }
+
+    let currentTemplate = null;
+
+    async function init() {
+      try {
+        currentTemplate = await getTemplate(templateId);
+      } catch {
+        window.location.href = '/home';
+        return;
+      }
+
+      // Paginatitel en hero instellen
+      document.title = `${currentTemplate.name} — Prelegal`;
+      document.getElementById('hero-title').innerHTML =
+        `<em>${currentTemplate.name}</em>`;
+      document.getElementById('hero-category').textContent =
+        currentTemplate.category;
+
+      // Formulier opbouwen vanuit variables[]
+      const container = document.getElementById('form-fields');
+      buildForm(container, currentTemplate.variables, scheduleUpdate);
+
+      // Eerste preview render
+      updatePreview();
+    }
+
+    // ── DEBOUNCE: 150ms wachten na typen ──────────────────────────
+    let _timer = null;
+    function scheduleUpdate() {
+      clearTimeout(_timer);
+      _timer = setTimeout(updatePreview, 150);
+    }
+    // Maak scheduleUpdate bereikbaar voor de inline onclick-knoppen
+    window.scheduleUpdate = scheduleUpdate;
+
+    // ── PREVIEW EN VOORTGANG BIJWERKEN ────────────────────────────
+    function updatePreview() {
+      if (!currentTemplate) return;
+
+      const values   = getValues(currentTemplate.variables);
+      const progress = getProgress(currentTemplate.variables);
+
+      // Voortgangsbalk
+      document.getElementById('progress-fill').style.width =
+        progress.percentage + '%';
+      document.getElementById('progress-label').innerHTML =
+        progress.filled === progress.total
+          ? `<strong>Volledig ingevuld</strong> — klaar om te downloaden`
+          : `${progress.filled} van <strong>${progress.total}</strong> verplichte velden ingevuld`;
+
+      // Document preview
+      document.getElementById('doc-preview').innerHTML =
+        renderHtml(currentTemplate.content, values);
+    }
+
+    // ── DOWNLOADEN ────────────────────────────────────────────────
+    window.downloadTxt = function() {
+      if (!currentTemplate) return;
+      const values   = getValues(currentTemplate.variables);
+      const text     = renderText(currentTemplate.content, values);
+      const filename = `${currentTemplate.id}-prelegal.txt`;
+
+      const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href     = url;
+      a.download = filename;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 100);
+    };
+
+    window.printDoc = function() {
+      const title = currentTemplate ? currentTemplate.name : 'Document';
+      const prev  = document.title;
+      document.title = `${title} – Prelegal`;
+      window.print();
+      setTimeout(() => { document.title = prev; }, 1000);
+    };
+
+    init();
+  </script>
+
+</body>
+</html>

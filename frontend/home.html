@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prelegal – Documenten</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/css/prelegal.css" />
+</head>
+<body>
+
+  <header>
+    <a class="logo" href="/home">
+      <div class="logo-mark">
+        <svg viewBox="0 0 16 16"><path d="M8 1L2 4v4c0 3.5 2.5 6.5 6 7.5C11.5 14.5 14 11.5 14 8V4L8 1z"/></svg>
+      </div>
+      <span class="logo-text">Pre<span>legal</span></span>
+    </a>
+    <div class="header-actions">
+      <span class="header-badge">Juridische documenten op maat</span>
+      <button class="btn-ghost" id="logout-btn">Uitloggen</button>
+    </div>
+  </header>
+
+  <div class="hero">
+    <div class="hero-inner">
+      <div>
+        <h1>Kies een <em>document</em></h1>
+        <p>Selecteer een documenttype om te beginnen</p>
+        <div class="hero-rule"></div>
+      </div>
+      <div class="hero-meta">
+        <div class="doc-type">Prelegal Platform</div>
+        <div class="jurisdiction">Nederlands recht · Alle rechtsgebieden</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-content">
+    <div class="template-grid" id="template-grid">
+      <!-- Wordt dynamisch gevuld door JS -->
+    </div>
+  </div>
+
+  <script type="module">
+    import { getAllTemplates } from '/assets/js/api.js';
+
+    // Auth-guard: niet ingelogd → terug naar loginpagina
+    if (!sessionStorage.getItem('pl_logged_in')) {
+      window.location.href = '/';
+    }
+
+    // Uitloggen
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      sessionStorage.removeItem('pl_logged_in');
+      window.location.href = '/';
+    });
+
+    // Template-kaarten laden
+    async function init() {
+      const grid = document.getElementById('template-grid');
+
+      try {
+        const templates = await getAllTemplates();
+
+        for (const tpl of templates) {
+          const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          const card = document.createElement('a');
+          card.className = 'doc-card';
+          card.href = `/document?id=${esc(tpl.id)}`;
+          card.innerHTML = `
+            <div class="card-category">${esc(tpl.category)}</div>
+            <div class="card-title">${esc(tpl.name)}</div>
+            <div class="card-meta">${esc(String(tpl.variable_count))} invulvelden</div>
+            <div class="card-desc">${esc(tpl.description)}</div>
+            <div class="card-cta">Document aanmaken &rarr;</div>
+          `;
+          grid.appendChild(card);
+        }
+      } catch (err) {
+        grid.innerHTML = `<p style="color:var(--ink-muted); font-size:0.85rem;">
+          Kon de documenten niet laden. Controleer of de server actief is.
+        </p>`;
+      }
+    }
+
+    init();
+  </script>
+
+</body>
+</html>

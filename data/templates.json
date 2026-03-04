@@ -7,10 +7,10 @@
       "id": "huurovereenkomst",
       "name": "Huurovereenkomst",
       "category": "Vastgoed",
-      "description": "Standaard huurovereenkomst voor de verhuur van een woning of appartement conform de Belgische woninghuurwetgeving.",
+      "description": "Standaard huurovereenkomst voor de verhuur van een woning of appartement conform de Nederlandse huurwetgeving.",
       "file": "templates/huurovereenkomst.json",
       "variable_count": 16,
-      "legal_basis": "Vlaams Woninghuurdecreet van 9 november 2018"
+      "legal_basis": "Burgerlijk Wetboek Boek 7 – Huur"
     },
     {
       "id": "nda",
@@ -19,16 +19,16 @@
       "description": "Non-disclosure agreement voor het beschermen van vertrouwelijke informatie tussen twee partijen.",
       "file": "templates/nda.json",
       "variable_count": 10,
-      "legal_basis": "Belgisch contractenrecht (BW)"
+      "legal_basis": "Nederlands contractenrecht (BW Boek 6)"
     },
     {
       "id": "arbeidsovereenkomst",
       "name": "Arbeidsovereenkomst",
       "category": "Werk",
-      "description": "Standaard arbeidsovereenkomst voor bedienden of arbeiders conform de Belgische arbeidsregelgeving.",
+      "description": "Standaard arbeidsovereenkomst voor werknemers conform de Nederlandse arbeidswetgeving.",
       "file": "templates/arbeidsovereenkomst.json",
       "variable_count": 19,
-      "legal_basis": "Wet op de arbeidsovereenkomsten van 3 juli 1978"
+      "legal_basis": "Burgerlijk Wetboek Boek 7 Titel 10 – Arbeidsovereenkomst"
     },
     {
       "id": "koopovereenkomst",
@@ -37,7 +37,7 @@
       "description": "Overeenkomst voor de koop en verkoop van roerende goederen tussen twee partijen.",
       "file": "templates/koopovereenkomst.json",
       "variable_count": 15,
-      "legal_basis": "Belgisch Burgerlijk Wetboek – Koop"
+      "legal_basis": "Burgerlijk Wetboek Boek 7 – Koop"
     },
     {
       "id": "opdrachtsovereenkomst",
@@ -46,7 +46,7 @@
       "description": "Overeenkomst voor de uitvoering van een specifieke opdracht door een zelfstandige of freelancer.",
       "file": "templates/opdrachtsovereenkomst.json",
       "variable_count": 16,
-      "legal_basis": "Belgisch contractenrecht (BW) – Aanneming van werk"
+      "legal_basis": "Burgerlijk Wetboek Boek 7 – Opdracht"
     }
   ],
   "categories": [
