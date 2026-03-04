@@ -1,8 +1,11 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+from pydantic import BaseModel
 import json
 from pathlib import Path
+
+from backend.nda_chat import call_nda_chat
 
 app = FastAPI(title="Prelegal API", version="1.0.0")
 
@@ -47,6 +50,22 @@ def get_template(template_id: str):
 
     with open(file_path, encoding="utf-8") as f:
         return json.load(f)
+
+
+# ── NDA CHAT ENDPOINT ─────────────────────────────────────────────────────────
+
+class NdaChatRequest(BaseModel):
+    messages: list
+    current_values: dict = {}
+
+
+@app.post("/api/nda-chat")
+async def nda_chat(req: NdaChatRequest):
+    try:
+        result = await call_nda_chat(req.messages, req.current_values)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 # ── FRONTEND SERVEREN ─────────────────────────────────────────────────────────

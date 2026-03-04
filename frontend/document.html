@@ -42,8 +42,42 @@
 
   <div class="main-split">
 
-    <!-- Formulier paneel (links) -->
-    <aside class="form-panel">
+    <!-- Chat paneel (links, alleen actief voor NDA) -->
+    <div class="chat-panel" id="chat-panel" style="display:none">
+      <div class="chat-header">
+        <div class="panel-title">AI Assistent</div>
+        <div class="progress-wrap">
+          <div class="progress-track">
+            <div class="progress-fill" id="chat-progress-fill"></div>
+          </div>
+          <div class="progress-label" id="chat-progress-label">Bezig met laden…</div>
+        </div>
+      </div>
+      <div class="chat-messages" id="chat-messages"></div>
+      <div class="chat-input-wrap">
+        <textarea id="chat-input" placeholder="Typ uw antwoord…" rows="2"></textarea>
+        <button id="chat-send">Verstuur</button>
+      </div>
+      <div class="chat-manual-toggle">
+        <button id="manual-toggle-btn">Bewerk handmatig</button>
+      </div>
+      <div class="chat-manual-form" id="chat-manual-form" style="display:none">
+        <div id="chat-form-fields"></div>
+      </div>
+      <div class="chat-download">
+        <button class="download-btn" onclick="printDoc()">
+          <svg viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z"/></svg>
+          Opslaan als PDF
+        </button>
+        <button class="download-btn download-btn--secondary" onclick="downloadTxt()">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+          Download als .txt
+        </button>
+      </div>
+    </div>
+
+    <!-- Formulier paneel (links, alle overige documenten) -->
+    <aside class="form-panel" id="form-panel">
       <div class="panel-title">Gegevens invullen</div>
 
       <div class="progress-wrap">
@@ -85,8 +119,8 @@
   </div>
 
   <script type="module">
-    import { getTemplate }    from '/assets/js/api.js';
-    import { renderHtml, renderText } from '/assets/js/template-engine.js';
+    import { getTemplate, sendNdaChat } from '/assets/js/api.js';
+    import { renderHtml, renderText }   from '/assets/js/template-engine.js';
     import { buildForm, getValues, getProgress } from '/assets/js/form-builder.js';
 
     // Auth-guard: niet ingelogd → terug naar loginpagina
@@ -120,18 +154,21 @@
         return;
       }
 
-      // Paginatitel en hero instellen
       document.title = `${currentTemplate.name} — Prelegal`;
-      document.getElementById('hero-title').innerHTML =
-        `<em>${currentTemplate.name}</em>`;
-      document.getElementById('hero-category').textContent =
-        currentTemplate.category;
+      document.getElementById('hero-title').innerHTML = `<em>${currentTemplate.name}</em>`;
+      document.getElementById('hero-category').textContent = currentTemplate.category;
 
-      // Formulier opbouwen vanuit variables[]
-      const container = document.getElementById('form-fields');
-      buildForm(container, currentTemplate.variables, scheduleUpdate);
+      if (currentTemplate.id === 'nda') {
+        // NDA: formulier in verborgen handmatig-sectie, chat als hoofd-interface
+        buildForm(document.getElementById('chat-form-fields'), currentTemplate.variables, scheduleUpdate);
+        document.getElementById('form-panel').style.display  = 'none';
+        document.getElementById('chat-panel').style.display  = 'flex';
+        initNdaChat();
+      } else {
+        // Overige documenten: standaard formulier
+        buildForm(document.getElementById('form-fields'), currentTemplate.variables, scheduleUpdate);
+      }
 
-      // Eerste preview render
       updatePreview();
     }
 
@@ -141,7 +178,6 @@
       clearTimeout(_timer);
       _timer = setTimeout(updatePreview, 150);
     }
-    // Maak scheduleUpdate bereikbaar voor de inline onclick-knoppen
     window.scheduleUpdate = scheduleUpdate;
 
     // ── PREVIEW EN VOORTGANG BIJWERKEN ────────────────────────────
@@ -151,17 +187,129 @@
       const values   = getValues(currentTemplate.variables);
       const progress = getProgress(currentTemplate.variables);
 
-      // Voortgangsbalk
-      document.getElementById('progress-fill').style.width =
-        progress.percentage + '%';
-      document.getElementById('progress-label').innerHTML =
-        progress.filled === progress.total
-          ? `<strong>Volledig ingevuld</strong> — klaar om te downloaden`
-          : `${progress.filled} van <strong>${progress.total}</strong> verplichte velden ingevuld`;
+      const pct = progress.percentage + '%';
+      const lbl = progress.filled === progress.total
+        ? `<strong>Volledig ingevuld</strong> — klaar om te downloaden`
+        : `${progress.filled} van <strong>${progress.total}</strong> verplichte velden ingevuld`;
 
-      // Document preview
+      // Bijwerken in welk paneel zichtbaar is (form-panel of chat-panel)
+      for (const id of ['progress-fill', 'chat-progress-fill']) {
+        const el = document.getElementById(id);
+        if (el) el.style.width = pct;
+      }
+      for (const id of ['progress-label', 'chat-progress-label']) {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = lbl;
+      }
+
       document.getElementById('doc-preview').innerHTML =
         renderHtml(currentTemplate.content, values);
+    }
+
+    // ── NDA CHAT ───────────────────────────────────────────────────
+    let chatHistory = [];
+    let isSending   = false;
+
+    async function initNdaChat() {
+      // "Bewerk handmatig" toggle
+      document.getElementById('manual-toggle-btn').addEventListener('click', () => {
+        const form = document.getElementById('chat-manual-form');
+        const open = form.style.display !== 'none';
+        form.style.display = open ? 'none' : 'block';
+        document.getElementById('manual-toggle-btn').textContent =
+          open ? 'Bewerk handmatig' : 'Verberg formulier';
+      });
+
+      // Stuurknop en Enter-toets
+      document.getElementById('chat-send').addEventListener('click', sendChatMessage);
+      document.getElementById('chat-input').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          sendChatMessage();
+        }
+      });
+
+      // Haal de openingsvraag van de AI op
+      await startConversation();
+    }
+
+    async function startConversation() {
+      // Verborgen startbericht zodat het model het gesprek opent
+      const initMessages = [{ role: 'user', content: 'Begin het gesprek.' }];
+      isSending = true;
+      document.getElementById('chat-send').disabled = true;
+
+      const typing = appendBubble('…', 'typing');
+      try {
+        const result = await sendNdaChat(initMessages, {});
+        typing.remove();
+        appendBubble(result.reply, 'ai');
+        // Sla beide beurten op zodat het model de context heeft bij het volgende bericht
+        chatHistory = [
+          { role: 'user',      content: 'Begin het gesprek.' },
+          { role: 'assistant', content: result.reply },
+        ];
+        if (result.patches && result.patches.length > 0) applyPatches(result.patches);
+      } catch {
+        typing.remove();
+        appendBubble('Kon de assistent niet bereiken. Controleer de serververbinding.', 'ai');
+        chatHistory = [];
+      } finally {
+        isSending = false;
+        document.getElementById('chat-send').disabled = false;
+      }
+    }
+
+    async function sendChatMessage() {
+      if (isSending) return;
+
+      const input    = document.getElementById('chat-input');
+      const userText = input.value.trim();
+      if (!userText) return;
+
+      input.value = '';
+      appendBubble(userText, 'user');
+      chatHistory.push({ role: 'user', content: userText });
+
+      isSending = true;
+      document.getElementById('chat-send').disabled = true;
+
+      const typing = appendBubble('…', 'typing');
+      try {
+        const values = getValues(currentTemplate.variables);
+        const result = await sendNdaChat(chatHistory.slice(-10), values);
+        typing.remove();
+        appendBubble(result.reply, 'ai');
+        chatHistory.push({ role: 'assistant', content: result.reply });
+        if (result.patches && result.patches.length > 0) applyPatches(result.patches);
+      } catch {
+        typing.remove();
+        appendBubble('Er is een fout opgetreden. Probeer opnieuw.', 'ai');
+      } finally {
+        isSending = false;
+        document.getElementById('chat-send').disabled = false;
+        document.getElementById('chat-input').focus();
+      }
+    }
+
+    function appendBubble(text, role) {
+      const messages = document.getElementById('chat-messages');
+      const bubble   = document.createElement('div');
+      bubble.className  = `chat-bubble chat-bubble--${role}`;
+      bubble.textContent = text;
+      messages.appendChild(bubble);
+      messages.scrollTop = messages.scrollHeight;
+      return bubble;
+    }
+
+    function applyPatches(patches) {
+      for (const { field, value } of patches) {
+        const el = document.getElementById(field);
+        if (!el) continue;
+        el.value = value;
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+      updatePreview();
     }
 
     // ── DOWNLOADEN ────────────────────────────────────────────────

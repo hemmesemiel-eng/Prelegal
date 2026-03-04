@@ -88,9 +88,46 @@ Volg deze syntaxis **altijd** consistent bij het aanpassen van templates.
 
 ---
 
+## Huidige status & lopend werk
+
+### PL-4 — GEREED (PR #5 open op GitHub)
+Branch: `feature/PL-4-v1-prototype-fundering`
+Gebouwd: FastAPI backend (`backend/main.py`), frontend login/home/document, template engine, form builder, Docker setup.
+
+### PL-5 — IN UITVOERING (feature-dev skill, fase 4 afgerond)
+Branch: **nog niet aangemaakt** — implementatie nog niet begonnen.
+
+**Beslissingen al genomen (niet opnieuw vragen):**
+- Layout: chat links, NDA preview rechts (2-kolom, vervangt formulierpaneel)
+- AI vult velden **live** in tijdens het gesprek (niet pas aan het einde)
+- Verborgen formulier beschikbaar via "Bewerk handmatig" toggle
+- AI-toon: zakelijk, gericht, efficiënt — geen kleine talk
+- Architectuur: **Optie A — gestructureerde JSON response (niet-streaming)** ← dit nog bevestigen bij start
+
+**Wat nog gebouwd moet worden:**
+1. `backend/nda_chat.py` — nieuw bestand met AI-logica + OpenRouter aanroep
+2. `backend/main.py` — `NdaChatRequest` model + `POST /api/nda-chat` endpoint toevoegen
+3. `backend/requirements.txt` — `httpx==0.27.0` toevoegen
+4. `frontend/assets/js/api.js` — `sendNdaChat()` functie toevoegen
+5. `frontend/assets/css/prelegal.css` — chat panel CSS toevoegen
+6. `frontend/document.html` — chat panel HTML + JS logica (chat state, sendMessage, applyPatches, manual toggle)
+
+**Technische details Optie A:**
+- Backend: `POST /api/nda-chat` ontvangt `{messages, current_values}`, roept OpenRouter aan, geeft `{reply, patches}` terug
+- AI-systeemprompt instrueert het model om ALTIJD te antwoorden als: `{"reply": "...", "patches": [{"field": "...", "value": "..."}]}`
+- `_extract_json()` fallback als het model geen geldig JSON teruggeeft
+- `temperature: 0.3`, `max_tokens: 800`
+- Headers vereist door OpenRouter: `Authorization: Bearer <key>`, `HTTP-Referer: https://prelegal.nl`
+- OPENROUTER_API_KEY via `os.environ.get("OPENROUTER_API_KEY")` — staat al in `.env`
+- NDA-velden: `partij_1_naam`, `partij_1_adres`, `partij_1_ondernemingsnummer`, `partij_2_naam`, `partij_2_adres`, `partij_2_ondernemingsnummer`, `doel_samenwerking`, `duur_jaar`, `gemeente`, `datum_ondertekening`
+- Chat is **alleen actief als `currentTemplate.id === 'nda'`** — andere documenten blijven ongewijzigd
+- `applyPatches()`: `document.getElementById(field).value = value` + `el.dispatchEvent(new Event('input'))` + `updatePreview()`
+
+---
+
 ## Technische context
 
-- **Huidige fase:** HTML/CSS/JS-prototypes (nog geen framework of backend)
+- **Huidige fase:** V1 prototype live — FastAPI backend + frontend operationeel
 - **Lokale ontwikkelserver:** `http://localhost:8000` (via Docker)
 - **Hosting:** nog niet bepaald
 - **GitHub:** verbonden via MCP — gebruik de MCP-tools voor git-acties, **niet** de `gh` CLI (die is niet beschikbaar)
