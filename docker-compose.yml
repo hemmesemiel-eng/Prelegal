@@ -1,0 +1,19 @@
+services:
+  prelegal:
+    # Bouw de container op basis van de Dockerfile in de huidige map
+    build: .
+
+    # Poort 8000 in de container is bereikbaar via http://localhost:8000
+    ports:
+      - "8000:8000"
+
+    # Laad omgevingsvariabelen (zoals OPENROUTER_API_KEY) uit het .env bestand
+    env_file:
+      - .env
+
+    # Volumes: wijzigingen in deze mappen zijn direct zichtbaar in de container
+    # Zo hoef je de container niet opnieuw te bouwen na elke codewijziging
+    volumes:
+      - ./backend:/app/backend
+      - ./frontend:/app/frontend
+      - ./data:/app/data

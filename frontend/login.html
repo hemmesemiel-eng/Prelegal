@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prelegal – Inloggen</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/css/prelegal.css" />
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <div class="logo-mark">
+        <svg viewBox="0 0 16 16"><path d="M8 1L2 4v4c0 3.5 2.5 6.5 6 7.5C11.5 14.5 14 11.5 14 8V4L8 1z"/></svg>
+      </div>
+      <span class="logo-text">Pre<span>legal</span></span>
+    </div>
+    <span class="header-badge">Juridische documenten op maat</span>
+  </header>
+
+  <div class="login-page">
+    <div class="login-card">
+      <p class="login-lead">Welkom terug</p>
+      <p class="login-sub">Log in om uw juridische documenten te beheren.</p>
+
+      <form id="login-form">
+        <div class="field">
+          <label for="email">E-mailadres</label>
+          <input type="email" id="email" name="email" placeholder="uw@emailadres.nl" required autocomplete="email" />
+        </div>
+        <div class="field">
+          <label for="password">Wachtwoord</label>
+          <input type="password" id="password" name="password" placeholder="••••••••" required autocomplete="current-password" />
+        </div>
+        <button type="submit" class="login-btn">Inloggen</button>
+        <p class="login-error" id="login-error">Onjuiste gegevens. Probeer het opnieuw.</p>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      // Nep-login: elke combinatie wordt geaccepteerd voor het prototype
+      sessionStorage.setItem('pl_logged_in', 'true');
+      window.location.href = '/home';
+    });
+  </script>
+
+</body>
+</html>
